@@ -1,0 +1,66 @@
+[
+  {
+    "id": "music_1",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb_fOV3Ixs99EYLvHH7fSeKRx4doeBjwyJKQ&usqp=CAU",
+    "path": "assets/music/music_1.mp3",
+    "name": "콜드플레이",
+    "title": "viva La Vida",
+    "length": "3분 17초"
+  },
+  {
+    "id": "music_2",
+    "image": "https://w.namu.la/s/426bf4c3324155e1b82e0e046c4e61042676dc0fd5fd75cb78897be9bd4175637a5c9613642fde68a30929743919cd17c121bbb40a61245667c9a4b14c53cb0dfb5b52df427513160eb68dc042e315760fd1cb669b63dffdb1306ec18e3555742e1ea099c9c91e327fd637ceac15b558",
+    "path": "assets/music/music_2.mp3",
+    "name": "아이유",
+    "title": "Love Y",
+    "length": "4분 12초"
+  },
+  {
+    "id": "music_3",
+    "image": "https://flexible.img.hani.co.kr/flexible/normal/970/647/imgdb/original/2022/0502/20220502503242.jpg",
+    "path": "assets/music/music_3.mp3",
+    "name": "르세라핌",
+    "title": "Shape o",
+    "length": "2분 33초"
+  },
+  {
+    "id": "music_4",
+    "image": "https://image.newsis.com/2022/12/30/NISI20221230_0001165854_web.jpg?rnd=20221230152107",
+    "path": "assets/music/music_4.mp3",
+    "name": "아이브",
+    "title": "Someone like",
+    "length": "4분 20초"
+  },
+  {
+    "id": "music_5",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Big_Bang_2016_%27MADE%27_Press_Conference.png/500px-Big_Bang_2016_%27MADE%27_Press_Conference.png",
+    "path": "assets/music/music_5.mp3",
+    "name": "박효신",
+    "title": "Thinking",
+    "length": "3분 11초"
+  },
+  {
+    "id": "music_6",
+    "image": "https://img4.daumcdn.net/thumb/R658x0.q70/?fname=https://t1.daumcdn.net/news/201906/28/segye/20190628142937005yyqz.jpg",
+    "path": "assets/music/music_6.mp3",
+    "name": "빅뱅",
+    "title": "Cheer",
+    "length": "1분 44초"
+  },
+  {
+    "id": "music_7",
+    "image": "https://newsimg.hankookilbo.com/cms/articlerelease/2021/10/05/f7165688-4f0e-48d1-ab00-3ee5ad01c819.jpg",
+    "path": "assets/music/music_7.mp3",
+    "name": "나플라",
+    "title": "ththth",
+    "length": "2분 27초"
+  },
+  {
+    "id": "music_8",
+    "image": "https://www.cuonet.com/data/file/job/thumb-2049772537_svNU46eg_0b37e8044a32d9021b28ff4f7be8d44dbd4326a0_700x466.jpg",
+    "path": "assets/music/music_8.mp3",
+    "name": "VMC",
+    "title": "Smells Like",
+    "length": "3분 27초"
+  }
+]

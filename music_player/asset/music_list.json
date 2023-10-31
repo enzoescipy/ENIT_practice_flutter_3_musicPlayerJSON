@@ -1,0 +1,44 @@
+[
+    {
+        "name": "핫한 음악 1",
+        "thumbnail_url": "https://img.icons8.com/ios/250/000000/nut.png",
+        "author_lyrics": "감자",
+        "author_melody": "피망"
+    },
+    {
+        "name": "핫한 음악 2",
+        "thumbnail_url": "https://img.icons8.com/ios/250/000000/organization.png",
+        "author_lyrics": "당근",
+        "author_melody": "오이"
+    },
+    {
+        "name": "핫한 음악 3",
+        "thumbnail_url": "https://img.icons8.com/ios/250/000000/greek-pillar-capital.png",
+        "author_lyrics": "배추",
+        "author_melody": "양파"
+    },
+    {
+        "name": "핫한 음악 4",
+        "thumbnail_url": "https://img.icons8.com/ios/250/000000/paint-palette.png",
+        "author_lyrics": "토마토",
+        "author_melody": "슈퍼맨"
+    },
+    {
+        "name": "핫한 음악 5",
+        "thumbnail_url": "https://img.icons8.com/ios/250/000000/area-chart.png",
+        "author_lyrics": "초콜릿",
+        "author_melody": "커피"
+    },
+    {
+        "name": "핫한 음악 6",
+        "thumbnail_url": "https://img.icons8.com/ios/250/000000/dashboard.png",
+        "author_lyrics": "샤베트",
+        "author_melody": "레몬"
+    },
+    {
+        "name": "핫한 음악 7",
+        "thumbnail_url": "https://img.icons8.com/ios/250/000000/gantt-chart.png",
+        "author_lyrics": "라임",
+        "author_melody": "바질"
+    }
+]
