@@ -51,7 +51,7 @@ Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context, {
       Navigator.pushNamed(context, NewPlayListPage.routeName);
     }
 
-    insertFirst = Item.playListVOtoListViewItem(context, tempVO, onTapInstead:_makeNewPlayListRoute);
+    insertFirst = Item.playListVOtoListViewItem(context, tempVO, onTapInstead:_makeNewPlayListRoute, isDropDownMenu: false);
   }
   return _simpleListViewFromVO(sourceVOList, (cont, vo) => Item.playListVOtoListViewItem(cont, vo as PlayListVO), context, insertFirst: insertFirst);
 }

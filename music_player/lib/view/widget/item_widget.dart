@@ -12,7 +12,33 @@ Future<bool> _changeIsLiked(status) async {
   return Future.value(!status);
 }
 
-Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Function()? onTapInstead}) {
+enum PlayListCRUD { delete, update }
+
+Widget popupMenuPlayListCRUD() {
+  return PopupMenuButton<PlayListCRUD>(
+      itemBuilder: (context) => <PopupMenuEntry<PlayListCRUD>>[
+            const PopupMenuItem<PlayListCRUD>(
+              child: Text("delete"),
+              value: PlayListCRUD.delete,
+            ),
+            const PopupMenuItem<PlayListCRUD>(child: Text("update"), value: PlayListCRUD.update),
+          ]);
+}
+
+enum MusicCRUD { delete, update }
+
+Widget popupMenuMusicCRUD() {
+  return PopupMenuButton<MusicCRUD>(
+      itemBuilder: (context) => <PopupMenuEntry<MusicCRUD>>[
+            const PopupMenuItem<MusicCRUD>(
+              child: Text("delete"),
+              value: MusicCRUD.delete,
+            ),
+            const PopupMenuItem<MusicCRUD>(child: Text("update"), value: MusicCRUD.update),
+          ]);
+}
+
+Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Function()? onTapInstead, bool isDropDownMenu = true}) {
   // get the first element of the playlist
   String? thumbnail_url;
   final firstIndexMusic = vo.childrenIndex.isEmpty ? null : vo.childrenIndex.first;
@@ -51,6 +77,15 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Funct
     },
   );
 
+  final mixedChildren = [
+    Expanded(flex: 4, child: img),
+    Flexible(flex: 4, child: itemDescription),
+    Flexible(flex: 1, child: likeButton),
+  ];
+  if (isDropDownMenu) {
+    mixedChildren.add(Flexible(child: popupMenuMusicCRUD()));
+  }
+
   return GestureDetector(
     onTap: () {
       if (onTapInstead == null) {
@@ -65,9 +100,7 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Funct
       child: Container(
         decoration: RoundyDecoration.containerDecoration(WinterGreenColor.deepGrayBlue.withAlpha(20)),
         margin: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [Expanded(flex: 4, child: img), Flexible(flex: 4, child: itemDescription), Flexible(flex: 1, child: likeButton)],
-        ),
+        child: Row(children: mixedChildren),
       ),
     ),
   );
@@ -91,9 +124,7 @@ Widget musicVOtoListViewItem(BuildContext context, MusicVO vo) {
   );
 
   return GestureDetector(
-    // onLongPress: () {
-
-    // },
+    onLongPress: () {},
     onTap: () {
       debugConsole([MusicDetail.routeName, vo.name, "route pushed"]);
       Navigator.pushNamed(context, MusicDetail.routeName, arguments: MusicDetailArguments(vo));
@@ -104,7 +135,7 @@ Widget musicVOtoListViewItem(BuildContext context, MusicVO vo) {
         decoration: RoundyDecoration.containerDecoration(WinterGreenColor.deepGrayBlue.withAlpha(20)),
         margin: const EdgeInsets.all(8.0),
         child: Row(
-          children: [Expanded(child: img), Flexible(child: itemDescription)],
+          children: [Expanded(child: img), Flexible(child: itemDescription), Flexible(child: popupMenuMusicCRUD())],
           // children: [img, itemDescription],
         ),
       ),
