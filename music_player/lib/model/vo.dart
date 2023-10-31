@@ -6,9 +6,7 @@ abstract class VO {
 
   VO(this.name);
 
-  VO.fromMap(Map<String, dynamic> map) {
-    name = map["name"];
-  }
+  VO.fromMap(Map<String, dynamic> map);
 
   Map<String, dynamic> toMap() {
     return {"whichVO": whichVO, "name": name};
@@ -16,11 +14,13 @@ abstract class VO {
 }
 
 class MusicVO extends VO {
+  late String music_id;
   late String thumbnail_url;
-  late String author_lyrics;
-  late String author_melody;
+  late String music_path;
+  late String author;
+  late String length;
 
-  MusicVO(String name, this.thumbnail_url, this.author_lyrics, this.author_melody) : super(name) {
+  MusicVO(String name, this.thumbnail_url, this.author, this.length, this.music_id, this.music_path) : super(name) {
     whichVO = VOType.music;
     this.name = name;
   }
@@ -28,17 +28,23 @@ class MusicVO extends VO {
   @override
   MusicVO.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
     whichVO = VOType.music;
-    thumbnail_url = map["thumbnail_url"];
-    author_lyrics = map["author_lyrics"];
-    author_melody = map["author_melody"];
+    name = map["title"];
+    thumbnail_url = map["image"];
+    author = map["name"];
+    length = map["length"];
+    music_id = map["id"];
+    music_path = map["path"];
   }
 
   @override
   Map<String, dynamic> toMap() {
     final basicMap = super.toMap();
-    basicMap["thumbnail_url"] = thumbnail_url;
-    basicMap["author_lyrics"] = author_lyrics;
-    basicMap["author_melody"] = author_melody;
+    basicMap["image"] = thumbnail_url;
+    basicMap["name"] = author;
+    basicMap["title"] = name;
+    basicMap["length"] = length;
+    basicMap["id"] = music_id;
+    basicMap["path"] = music_path;
 
     return basicMap;
   }
@@ -61,6 +67,7 @@ class PlayListVO extends VO {
 
   @override
   PlayListVO.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
+    name = map["name"];
     whichVO = VOType.playList;
     likeOrder = map["likeOrder"];
     childrenIndex.clear();
