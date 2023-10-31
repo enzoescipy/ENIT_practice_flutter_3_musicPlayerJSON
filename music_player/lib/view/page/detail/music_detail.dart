@@ -47,7 +47,7 @@ class _MusicDetailState extends State<MusicDetail> {
           Padding(
             padding: const EdgeInsets.only(top: 3.0),
             child: Text(
-              musicVO.author_lyrics,
+              "${musicVO.author}\n${musicVO.length}",
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
