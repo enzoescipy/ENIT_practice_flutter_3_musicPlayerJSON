@@ -5,6 +5,7 @@ import 'page/main/playlist_page.dart';
 import 'page/main/playlist_page_liked.dart';
 import 'page/detail/playlist_detail.dart';
 import 'page/detail/music_detail.dart';
+import 'page/new_playlist/new_playlist_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       routes: {
         PlayListDetail.routeName: (context) => const PlayListDetail(),
         MusicDetail.routeName: (context) => const MusicDetail(),
+        NewPlayListPage.routeName: (context) => const NewPlayListPage(),
       },
     );
   }

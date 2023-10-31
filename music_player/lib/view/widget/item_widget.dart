@@ -11,7 +11,7 @@ Future<bool> _changeIsLiked(status) async {
   return Future.value(!status);
 }
 
-Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo) {
+Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Function()? onTapInstead}) {
   // get the first element of the playlist
   String? thumbnail_url;
   final firstIndexMusic = vo.childrenIndex.isEmpty ? null : vo.childrenIndex.first;
@@ -52,7 +52,11 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo) {
 
   return GestureDetector(
     onTap: () {
-      Navigator.pushNamed(context, PlayListDetail.routeName, arguments: PlayListDetailArguments(vo));
+      if (onTapInstead == null) {
+        Navigator.pushNamed(context, PlayListDetail.routeName, arguments: PlayListDetailArguments(vo));
+      } else {
+        onTapInstead();
+      }
     },
     child: Padding(
       padding: const EdgeInsets.all(8.0),
@@ -66,7 +70,6 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo) {
     ),
   );
 }
-
 
 Widget musicVOtoListViewItem(BuildContext context, MusicVO vo) {
   // get the first element of the playlist
@@ -95,7 +98,8 @@ Widget musicVOtoListViewItem(BuildContext context, MusicVO vo) {
         decoration: RoundyDecoration.containerDecoration(WinterGreenColor.deepGrayBlue.withAlpha(20)),
         margin: const EdgeInsets.all(8.0),
         child: Row(
-          children: [Expanded(flex: 4, child: img), Flexible(flex: 4, child: itemDescription)],
+          children: [Expanded(child: img), Flexible(child: itemDescription)],
+          // children: [img, itemDescription],
         ),
       ),
     ),

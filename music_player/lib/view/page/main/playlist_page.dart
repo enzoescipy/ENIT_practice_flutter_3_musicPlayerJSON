@@ -22,7 +22,7 @@ class _PlayListPageState extends State<PlayListPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [Component.appBar(context, title: "플레이 리스트"), Component.listViewPlayListVO(_contentVOList, context)],
+      children: [Component.appBar(context, title: "플레이 리스트"), Component.listViewPlayListVO(_contentVOList, context, isNewPlayListEnable:true)],
     );
   }
 }

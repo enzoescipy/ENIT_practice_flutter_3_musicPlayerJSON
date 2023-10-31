@@ -8,7 +8,7 @@ import 'package:music_player/model/hive_controle.dart';
 import 'package:music_player/controller/temporary_music_json_reader.dart';
 
 void main() async {
-  // enableDebug();
+  enableDebug();
   await Hive.initFlutter();
   await MusicJsonReader.InitializeReader();
   await HIVEController.initializeHive();
