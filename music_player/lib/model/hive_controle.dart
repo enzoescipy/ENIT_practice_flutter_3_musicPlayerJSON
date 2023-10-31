@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:music_player/package/debugConsole.dart';
 import 'vo.dart';
 
 /// RULE : DO NOT USE the box.put() for insertion.
@@ -9,7 +10,7 @@ class HIVEController {
   static Box<Map>? box;
   static const mainBoxName = "main";
 
-  static int likeOrder = -1;
+  // static int likeOrder = -1;
 
   /// this asynchronous function must be called and returned before calling other function.
   static Future<void> initializeHive() async {
@@ -46,7 +47,7 @@ class HIVEController {
     if (whichVO == null) {
       return box!.values.toList();
     } else {
-      return box!.values.where((map) => map["whichVO"] == whichVO).toList();
+      return box!.values.where((map) => map["whichVO"] == whichVO.index).toList();
     }
   }
 
@@ -67,7 +68,8 @@ class HIVEController {
       if (voMap == null) {
         continue;
       }
-      if (voMap["name"] == name && voMap["whichVO"] == whichVO) {
+      // debugConsole([key, voMap["name"], voMap["whichVO"], name, whichVO]);
+      if (voMap["name"] == name && voMap["whichVO"] == whichVO.index) {
         return key;
       }
     }
@@ -86,11 +88,11 @@ class HIVEController {
 
     // search if there are already vo inside the hive box.
     final key = findVOKeybyName(vo.name, vo.whichVO);
-    // Auto increase the like order
-    likeOrder++;
+    // debugConsole([key, vo.name, vo.whichVO]);
+
     // turn VO into the compatible Map object.
     final voMap = vo.toMap();
-    
+
     // put voMap in the box
     // if vo already exists, override that.
     if (key != null) {

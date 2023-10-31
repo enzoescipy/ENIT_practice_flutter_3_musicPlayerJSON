@@ -7,6 +7,8 @@ import 'page/detail/playlist_detail.dart';
 import 'page/detail/music_detail.dart';
 import 'page/new_playlist/new_playlist_page.dart';
 
+import 'package:music_player/controller/vo_controle.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -43,7 +45,7 @@ class _NavigateHomePageState extends State<NavigateHomePage> {
   void _onTap(int index) {
     setState(() {
       _selectedIndex = index;
-      // VOStageCommitGet.commit();
+      VOStageCommitGet.commit();
     });
   }
 

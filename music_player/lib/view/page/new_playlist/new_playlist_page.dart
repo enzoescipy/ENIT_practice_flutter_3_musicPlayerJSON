@@ -3,6 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:music_player/model/vo.dart';
 import 'package:music_player/controller/temporary_music_json_reader.dart';
 import 'package:music_player/package/debugConsole.dart';
+import 'package:music_player/controller/vo_controle.dart';
+
+import 'package:music_player/view/page/main/playlist_page.dart';
+
+
 import 'package:music_player/view/widget/item_widget.dart' as Item;
 import 'package:music_player/view/widget/page_component.dart' as Component;
 
@@ -16,10 +21,10 @@ class NewPlayListPage extends StatefulWidget {
 
 class _NewPlayListPageState extends State<NewPlayListPage> {
   int _stageNum = 0;
-  late final PlayListVO handlingVO;
+  PlayListVO? playListVO;
 
   /// each indices are music vo indices from DB, and value is "if that musicVO is included with the playlist"
-  late List<bool> _musicVOIndexAll;
+  late List<bool> _musicVOIndexBoolAll;
   late List<MusicVO> _musicVOList;
   final _textController = TextEditingController();
 
@@ -28,7 +33,7 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
     // TODO: implement initState
     super.initState();
     _musicVOList = MusicJsonReader.getAll();
-    _musicVOIndexAll = _musicVOList.map((vo) => false).toList();
+    _musicVOIndexBoolAll = _musicVOList.map((vo) => false).toList();
   }
 
   @override
@@ -47,14 +52,28 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
   }
 
   void onSubmitMusic() {
+    // convert the boolean list to index list
+    for (int i = 0; i < _musicVOIndexBoolAll.length; i++) {
+      if (_musicVOIndexBoolAll[i] == true) {
+        playListVO!.childrenIndex.add(i);
+      }
+    }
+
+    // save to DB
+    VOStageCommitGet.insertVO(playListVO!);
+    VOStageCommitGet.commit();
+
+    // initialization
     _stageNum = 0;
     _musicVOList = MusicJsonReader.getAll();
-    _musicVOIndexAll = _musicVOList.map((vo) => false).toList();
+    _musicVOIndexBoolAll = _musicVOList.map((vo) => false).toList();
+
+    // route
     Navigator.pop(context);
   }
 
   Widget selectMusicIncluded() {
-    debugConsole("Called!!");
+    // debugConsole("Called!!");
 
     final widgetList = _musicVOList.map((vo) => Item.musicVOtoListViewItem(context, vo)).toList();
     final List<Widget> widgetWithCheckBoxList = [];
@@ -64,10 +83,10 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
         Flexible(
           flex: 1,
           child: Checkbox(
-              value: _musicVOIndexAll[i],
+              value: _musicVOIndexBoolAll[i],
               onChanged: (bool? value) {
                 setState(() {
-                  _musicVOIndexAll[i] = value!;
+                  _musicVOIndexBoolAll[i] = value!;
                 });
               }),
         )
@@ -106,7 +125,7 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
       return;
     }
     setState(() {
-      handlingVO = PlayListVO(text, []);
+      playListVO = PlayListVO(text, []);
       _stageNum++;
     });
   }

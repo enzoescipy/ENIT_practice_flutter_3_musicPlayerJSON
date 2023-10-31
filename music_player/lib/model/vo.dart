@@ -9,7 +9,7 @@ abstract class VO {
   VO.fromMap(Map<String, dynamic> map);
 
   Map<String, dynamic> toMap() {
-    return {"whichVO": whichVO, "name": name};
+    return {"whichVO": whichVO.index, "name": name};
   }
 }
 

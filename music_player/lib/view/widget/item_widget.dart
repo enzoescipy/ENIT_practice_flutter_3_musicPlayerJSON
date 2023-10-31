@@ -16,6 +16,10 @@ enum PlayListCRUD { delete, update }
 
 Widget popupMenuPlayListCRUD() {
   return PopupMenuButton<PlayListCRUD>(
+      onSelected: (PlayListCRUD selected) {
+        //TODO
+        VOStageCommitGet.commit();
+      },
       itemBuilder: (context) => <PopupMenuEntry<PlayListCRUD>>[
             const PopupMenuItem<PlayListCRUD>(
               child: Text("delete"),
@@ -29,6 +33,10 @@ enum MusicCRUD { delete, update }
 
 Widget popupMenuMusicCRUD() {
   return PopupMenuButton<MusicCRUD>(
+      onSelected: (MusicCRUD selected) {
+        //TODO
+        VOStageCommitGet.commit();
+      },
       itemBuilder: (context) => <PopupMenuEntry<MusicCRUD>>[
             const PopupMenuItem<MusicCRUD>(
               child: Text("delete"),
@@ -69,10 +77,11 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Funct
     isLiked: vo.likeOrder < 0 ? false : true,
     onTap: (isLiked) async {
       if (!isLiked) {
-        VOStageCommitGet.insertVO(vo);
+        vo.likeOrder = 1; // make vo.likeorder positive
       } else {
-        VOStageCommitGet.deleteVO(vo);
+        vo.likeOrder = -1; // make vo.likeorder negative
       }
+      VOStageCommitGet.insertVO(vo);
       return _changeIsLiked(isLiked);
     },
   );
@@ -90,6 +99,7 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Funct
     onTap: () {
       if (onTapInstead == null) {
         debugConsole([PlayListDetail.routeName, vo.name, "route pushed"]);
+        VOStageCommitGet.commit();
         Navigator.pushNamed(context, PlayListDetail.routeName, arguments: PlayListDetailArguments(vo));
       } else {
         onTapInstead();
@@ -124,7 +134,6 @@ Widget musicVOtoListViewItem(BuildContext context, MusicVO vo) {
   );
 
   return GestureDetector(
-    onLongPress: () {},
     onTap: () {
       debugConsole([MusicDetail.routeName, vo.name, "route pushed"]);
       Navigator.pushNamed(context, MusicDetail.routeName, arguments: MusicDetailArguments(vo));

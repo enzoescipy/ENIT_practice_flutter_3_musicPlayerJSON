@@ -41,6 +41,7 @@ class VOStageCommitGet {
   /// [enum StagedType, VO vo]
   /// for the which vo to stage, and which action to perform.
   static List<List> stagedList = [];
+  static int likeOrder = -1;
 
   static void insertVO(VO vo) {
     // check if vo is imageVO or WebVO
@@ -50,6 +51,12 @@ class VOStageCommitGet {
       throw Exception("vo must be the PlayListVO");
     }
 
+    // Auto increase the like order and change vo's likeorder
+    if (vo.likeOrder >= 0) {
+      likeOrder++;
+      vo.likeOrder = likeOrder;
+    }
+
     // search if there are some VO already inserted/deleted before.
     bool isAlreadyVOStaged = false;
     for (int i = 0; i < stagedList.length; i++) {
@@ -57,6 +64,7 @@ class VOStageCommitGet {
       final StagedType stageType = stage[0];
       final VO stagedVO = stage[1];
 
+      // debugConsole([stagedVO.name, stagedVO.whichVO, vo.name, vo.whichVO]);
       if (stagedVO.name == vo.name && stagedVO.whichVO == vo.whichVO) {
         // this means there already staged action for this vo.
         isAlreadyVOStaged = true;
@@ -103,7 +111,7 @@ class VOStageCommitGet {
   }
 
   static void commit() {
-    debugConsole(stagedList);
+    // debugConsole(stagedList);
     for (int i = 0; i < stagedList.length; i++) {
       final VO stagedVO = stagedList[i][1];
       final StagedType stageType = stagedList[i][0];
@@ -130,6 +138,23 @@ class VOStageCommitGet {
     });
 
     voListAll.sort((a, b) => a.likeOrder.compareTo(b.likeOrder));
+    return voListAll;
+  }
+
+  /// get only liked vo.
+  static List<PlayListVO> getLiked() {
+    final mapListAll = HIVEController.getAll(null);
+    List<PlayListVO> voListAll = [];
+    mapListAll.forEach((map) {
+      var newVO = PlayListVO(map["name"], map["childrenIndex"]);
+      newVO.likeOrder = map["likeOrder"];
+      if (newVO.likeOrder >= 0) {
+        voListAll.add(newVO);
+      }
+    });
+
+    voListAll.sort((a, b) => a.likeOrder.compareTo(b.likeOrder));
+    debugConsole(voListAll.map((e) => e.likeOrder).toList());
     return voListAll;
   }
 

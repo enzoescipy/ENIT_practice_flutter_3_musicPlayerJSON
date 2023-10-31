@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/model/vo.dart';
 import 'package:music_player/view/static/myOrdinaryStyle.dart';
-import 'package:music_player/view/page/new_playlist/new_playlist_page.dart';
 import 'package:music_player/package/debugConsole.dart';
 
 import 'package:music_player/view/widget/item_widget.dart' as Item;
@@ -23,7 +22,6 @@ Widget appBar(BuildContext context, {String title = "new AppBar", bool isbackBut
   );
 }
 
-
 Widget listViewFrom(List<Widget> children) {
   return Expanded(child: ListView(children: children));
 }
@@ -40,18 +38,16 @@ Widget _simpleListViewFromVO(List<VO> sourceVOList, Widget Function(BuildContext
   return Expanded(child: ListView(children: widgetList));
 }
 
+Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context, {bool isNewPlayListEnable = false, void Function()? routeHandler}) {
+  if (isNewPlayListEnable == true && routeHandler == null) {
+    throw Exception("routehandler must be prepared if you user the isNewPlay어쩌구");
+  }
 
-Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context, {bool isNewPlayListEnable = false}) {
   Widget? insertFirst = null;
   if (isNewPlayListEnable) {
     final tempVO = PlayListVO("새로운 플레이리스트 만들기", []);
 
-    void _makeNewPlayListRoute() {
-      debugConsole([NewPlayListPage.routeName, "route pushed"]);
-      Navigator.pushNamed(context, NewPlayListPage.routeName);
-    }
-
-    insertFirst = Item.playListVOtoListViewItem(context, tempVO, onTapInstead:_makeNewPlayListRoute, isDropDownMenu: false);
+    insertFirst = Item.playListVOtoListViewItem(context, tempVO, onTapInstead: routeHandler, isDropDownMenu: false);
   }
   return _simpleListViewFromVO(sourceVOList, (cont, vo) => Item.playListVOtoListViewItem(cont, vo as PlayListVO), context, insertFirst: insertFirst);
 }
@@ -59,4 +55,3 @@ Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context, {
 Widget listViewMusicListVO(List<MusicVO> sourceVOList, BuildContext context) {
   return _simpleListViewFromVO(sourceVOList, (cont, vo) => Item.musicVOtoListViewItem(cont, vo as MusicVO), context);
 }
-
