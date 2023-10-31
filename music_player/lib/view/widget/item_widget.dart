@@ -3,7 +3,9 @@ import 'package:music_player/model/vo.dart';
 import 'package:music_player/package/debugConsole.dart';
 import 'package:music_player/view/page/detail/playlist_detail.dart';
 import 'package:music_player/view/page/detail/music_detail.dart';
+import 'package:music_player/view/page/new_playlist/new_playlist_page.dart';
 import 'package:music_player/view/static/myOrdinaryStyle.dart';
+import 'package:music_player/view/static/text_input_formatter.dart' as Format;
 import 'package:music_player/controller/vo_controle.dart';
 import 'package:music_player/controller/temporary_music_json_reader.dart';
 import 'package:like_button/like_button.dart';
@@ -12,24 +14,66 @@ Future<bool> _changeIsLiked(status) async {
   return Future.value(!status);
 }
 
-enum PlayListCRUD { delete, update }
+enum PlayListCRUD { delete, update_title, update_children }
 
-Widget popupMenuPlayListCRUD() {
+Widget popupMenuPlayListCRUD(PlayListVO vo, BuildContext context, void Function() setStateThen) {
   return PopupMenuButton<PlayListCRUD>(
-      onSelected: (PlayListCRUD selected) {
-        //TODO
+    onSelected: (PlayListCRUD selected) {
+      if (selected == PlayListCRUD.delete) {
+        VOStageCommitGet.deleteVO(vo);
         VOStageCommitGet.commit();
-      },
-      itemBuilder: (context) => <PopupMenuEntry<PlayListCRUD>>[
-            const PopupMenuItem<PlayListCRUD>(
-              child: Text("delete"),
-              value: PlayListCRUD.delete,
-            ),
-            const PopupMenuItem<PlayListCRUD>(child: Text("update"), value: PlayListCRUD.update),
-          ]);
+        setStateThen();
+      } else if (selected == PlayListCRUD.update_title) {
+        final textController = TextEditingController();
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("제목을 다시 입력해주세요."),
+                content: TextField(
+                  controller: textController,
+                  inputFormatters: Format.textFieldFormatKorEngNum,
+                  maxLines: 1,
+                ),
+                actions: [
+                  MaterialButton(
+                      child: Text("제출"),
+                      onPressed: () {
+                        final currentText = Format.afterSubmitFormatter(textController.text);
+                        if (currentText.isEmpty) {
+                          return;
+                        }
+                        VOStageCommitGet.deleteVO(vo);
+                        final newVO = PlayListVO(currentText, vo.childrenIndex);
+                        newVO.likeOrder = vo.likeOrder;
+                        VOStageCommitGet.insertVO(newVO);
+                        VOStageCommitGet.commit();
+                        setStateThen();
+                        Navigator.pop(context);
+                      })
+                ],
+              );
+            });
+      } else {
+        Navigator.pushNamed(context, NewPlayListPage.routeName, arguments: NewPlayListPageArguments(vo));
+        VOStageCommitGet.commit();
+      }
+    },
+    itemBuilder: (context) => <PopupMenuEntry<PlayListCRUD>>[
+      const PopupMenuItem<PlayListCRUD>(
+        child: Text(
+          "재생목록 삭제",
+          style: TextStyle(color: Colors.red),
+        ),
+        value: PlayListCRUD.delete,
+      ),
+      const PopupMenuItem<PlayListCRUD>(child: Text("재생목록 제목 수정"), value: PlayListCRUD.update_title),
+      const PopupMenuItem<PlayListCRUD>(child: Text("재생목록 음악 변경"), value: PlayListCRUD.update_children),
+    ],
+  );
 }
 
-enum MusicCRUD { delete, update }
+enum MusicCRUD { delete }
 
 Widget popupMenuMusicCRUD() {
   return PopupMenuButton<MusicCRUD>(
@@ -39,14 +83,17 @@ Widget popupMenuMusicCRUD() {
       },
       itemBuilder: (context) => <PopupMenuEntry<MusicCRUD>>[
             const PopupMenuItem<MusicCRUD>(
-              child: Text("delete"),
+              child: Text(
+                "재생목록에서 음악 삭제",
+                style: TextStyle(color: Colors.red),
+              ),
               value: MusicCRUD.delete,
-            ),
-            const PopupMenuItem<MusicCRUD>(child: Text("update"), value: MusicCRUD.update),
+            )
           ]);
 }
 
-Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Function()? onTapInstead, bool isDropDownMenu = true}) {
+Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo,
+    {void Function()? onTapInstead, bool isDropDownMenu = true, void Function()? setStateThen}) {
   // get the first element of the playlist
   String? thumbnail_url;
   final firstIndexMusic = vo.childrenIndex.isEmpty ? null : vo.childrenIndex.first;
@@ -91,8 +138,11 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Funct
     Flexible(flex: 4, child: itemDescription),
     Flexible(flex: 1, child: likeButton),
   ];
-  if (isDropDownMenu) {
-    mixedChildren.add(Flexible(child: popupMenuMusicCRUD()));
+  debugConsole([isDropDownMenu, setStateThen]);
+  if (isDropDownMenu == true && setStateThen != null) {
+    mixedChildren.add(Flexible(child: popupMenuPlayListCRUD(vo, context, setStateThen)));
+  } else if (isDropDownMenu == true && setStateThen == null) {
+    throw Exception("isDropDownMenu is true, then setStateThen must be not null");
   }
 
   return GestureDetector(

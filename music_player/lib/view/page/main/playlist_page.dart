@@ -19,11 +19,19 @@ class _PlayListPageState extends State<PlayListPage> {
 
   void _makeNewPlayListRoute() {
     debugConsole([NewPlayListPage.routeName, "route pushed"]);
-    Navigator.pushNamed(context, NewPlayListPage.routeName).then((value) {
+    Navigator.pushNamed(context, NewPlayListPage.routeName, arguments: NewPlayListPageArguments(null)).then((value) {
       setState(() {
         _contentVOList.clear();
         _contentVOList.addAll(VOStageCommitGet.getAll());
       });
+    });
+  }
+
+  void menuSetState() {
+    debugConsole("cleared!!!!!!!!");
+    setState(() {
+      _contentVOList.clear();
+      _contentVOList.addAll(VOStageCommitGet.getAll());
     });
   }
 
@@ -32,7 +40,7 @@ class _PlayListPageState extends State<PlayListPage> {
     return Column(
       children: [
         Component.appBar(context, title: "플레이 리스트"),
-        Component.listViewPlayListVO(_contentVOList, context, isNewPlayListEnable: true, routeHandler: _makeNewPlayListRoute)
+        Component.listViewPlayListVO(_contentVOList, context, isNewPlayListEnable: true, routeHandler: _makeNewPlayListRoute, menuSetState: menuSetState)
       ],
     );
   }

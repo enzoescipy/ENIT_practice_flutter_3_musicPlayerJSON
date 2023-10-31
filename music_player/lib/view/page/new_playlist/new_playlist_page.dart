@@ -4,12 +4,17 @@ import 'package:music_player/model/vo.dart';
 import 'package:music_player/controller/temporary_music_json_reader.dart';
 import 'package:music_player/package/debugConsole.dart';
 import 'package:music_player/controller/vo_controle.dart';
+import 'package:music_player/view/static/text_input_formatter.dart' as Format;
 
 import 'package:music_player/view/page/main/playlist_page.dart';
 
-
 import 'package:music_player/view/widget/item_widget.dart' as Item;
 import 'package:music_player/view/widget/page_component.dart' as Component;
+
+class NewPlayListPageArguments {
+  final PlayListVO? playListVO;
+  NewPlayListPageArguments(this.playListVO);
+}
 
 class NewPlayListPage extends StatefulWidget {
   const NewPlayListPage({super.key});
@@ -24,21 +29,44 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
   PlayListVO? playListVO;
 
   /// each indices are music vo indices from DB, and value is "if that musicVO is included with the playlist"
-  late List<bool> _musicVOIndexBoolAll;
-  late List<MusicVO> _musicVOList;
+  final List<bool> _musicVOIndexBoolAll = [];
+  final List<MusicVO> _musicVOList = [];
   final _textController = TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _musicVOList = MusicJsonReader.getAll();
-    _musicVOIndexBoolAll = _musicVOList.map((vo) => false).toList();
+    _musicVOList.addAll(MusicJsonReader.getAll());
+    _musicVOIndexBoolAll.addAll(_musicVOList.map((vo) => false).toList());
+
+    Future.delayed(Duration.zero, () {
+      final PlayListVO? playListVOFromArg = (ModalRoute.of(context)!.settings.arguments as NewPlayListPageArguments).playListVO;
+      // initialize params
+      playListVO = playListVOFromArg;
+      if (playListVO != null) {
+        _musicVOList.clear();
+        _musicVOIndexBoolAll.clear();
+        _musicVOList.addAll(MusicJsonReader.getAll());
+        _musicVOIndexBoolAll.addAll(_musicVOList.map((vo) => false).toList());
+
+        // convert index list to the boolean list
+        for (int i = 0; i < playListVO!.childrenIndex.length; i++) {
+          int index = playListVO!.childrenIndex[i];
+          _musicVOIndexBoolAll[index] = true;
+        }
+
+        setState(() {
+          _stageNum = 1;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = [Component.appBar(context, title: "플레이 리스트 만들기", isbackButton: true)];
+
     switch (_stageNum) {
       case 0:
         children.add(askNameOfPlayList());
@@ -53,6 +81,7 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
 
   void onSubmitMusic() {
     // convert the boolean list to index list
+    playListVO!.childrenIndex.clear();
     for (int i = 0; i < _musicVOIndexBoolAll.length; i++) {
       if (_musicVOIndexBoolAll[i] == true) {
         playListVO!.childrenIndex.add(i);
@@ -65,8 +94,10 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
 
     // initialization
     _stageNum = 0;
-    _musicVOList = MusicJsonReader.getAll();
-    _musicVOIndexBoolAll = _musicVOList.map((vo) => false).toList();
+    _musicVOList.clear();
+    _musicVOIndexBoolAll.clear();
+    _musicVOList.addAll(MusicJsonReader.getAll());
+    _musicVOIndexBoolAll.addAll(_musicVOList.map((vo) => false).toList());
 
     // route
     Navigator.pop(context);
@@ -85,6 +116,7 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
           child: Checkbox(
               value: _musicVOIndexBoolAll[i],
               onChanged: (bool? value) {
+                debugConsole(value);
                 setState(() {
                   _musicVOIndexBoolAll[i] = value!;
                 });
@@ -120,7 +152,7 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
   }
 
   void onSubmitTitle() {
-    final text = _textController.text.replaceAll(RegExp(r"[ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ]"), "");
+    final text = Format.afterSubmitFormatter(_textController.text);
     if (text.isEmpty) {
       return;
     }
@@ -142,7 +174,7 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
       padding: const EdgeInsets.only(right: 20),
       child: TextField(
         controller: _textController,
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[a-z|A-Z|0-9|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|ᆞ|ᆢ|ㆍ|ᆢ|ᄀᆞ|ᄂᆞ|ᄃᆞ|ᄅᆞ|ᄆᆞ|ᄇᆞ|ᄉᆞ|ᄋᆞ|ᄌᆞ|ᄎᆞ|ᄏᆞ|ᄐᆞ|ᄑᆞ|ᄒᆞ]'))],
+        inputFormatters: Format.textFieldFormatKorEngNum,
         style: Theme.of(context).textTheme.bodyMedium,
         maxLines: 1,
       ),

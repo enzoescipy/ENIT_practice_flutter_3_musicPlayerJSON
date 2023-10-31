@@ -13,10 +13,16 @@ class PlayListLikedPage extends StatefulWidget {
 class _PlayListLikedPageState extends State<PlayListLikedPage> {
   final List<PlayListVO> _contentVOList = VOStageCommitGet.getLiked();
 
+  void menuSetState() {
+    setState(() {
+      
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [Component.appBar(context, title: "좋아하는 플리"), Component.listViewPlayListVO(_contentVOList, context)],
+      children: [Component.appBar(context, title: "좋아하는 플리"), Component.listViewPlayListVO(_contentVOList, context, menuSetState:menuSetState )],
     );
   }
 }

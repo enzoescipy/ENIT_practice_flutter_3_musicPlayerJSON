@@ -38,18 +38,24 @@ Widget _simpleListViewFromVO(List<VO> sourceVOList, Widget Function(BuildContext
   return Expanded(child: ListView(children: widgetList));
 }
 
-Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context, {bool isNewPlayListEnable = false, void Function()? routeHandler}) {
+Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context,
+    {bool isNewPlayListEnable = false, void Function()? routeHandler, void Function()? menuSetState}) {
   if (isNewPlayListEnable == true && routeHandler == null) {
     throw Exception("routehandler must be prepared if you user the isNewPlay어쩌구");
   }
 
   Widget? insertFirst = null;
   if (isNewPlayListEnable) {
+    if (routeHandler == null) {
+      throw Exception("route 잇ㅅ어얀하ㅔ");
+    }
     final tempVO = PlayListVO("새로운 플레이리스트 만들기", []);
-
     insertFirst = Item.playListVOtoListViewItem(context, tempVO, onTapInstead: routeHandler, isDropDownMenu: false);
+  } else if (menuSetState == null) {
+    throw Exception("menuSetState 잇ㅅ어얀하ㅔ");
   }
-  return _simpleListViewFromVO(sourceVOList, (cont, vo) => Item.playListVOtoListViewItem(cont, vo as PlayListVO), context, insertFirst: insertFirst);
+  return _simpleListViewFromVO(sourceVOList, (cont, vo) => Item.playListVOtoListViewItem(cont, vo as PlayListVO, setStateThen: menuSetState), context,
+      insertFirst: insertFirst);
 }
 
 Widget listViewMusicListVO(List<MusicVO> sourceVOList, BuildContext context) {
