@@ -15,10 +15,10 @@ class WinterGreenColor {
 
 class CuteText {
   static const TextTheme cuteTextTheme = TextTheme(
-      bodyLarge: TextStyle(color: WinterGreenColor.deepGrayBlue, fontFamily: "Tmoney", fontSize: 40),
-      bodyMedium: TextStyle(color: WinterGreenColor.deepGrayBlue, fontFamily: "Tmoney", fontSize: 20),
-      bodySmall: TextStyle(color: WinterGreenColor.deepGrayBlue, fontFamily: "Tmoney", fontSize: 15));
-  static const Map<String, TextStyle> cuteTextStyle = {"contents": TextStyle(fontFamily: "Tmoney", color: WinterGreenColor.deepGrayBlue)};
+      bodyLarge: TextStyle(color: WinterGreenColor.deepGrayBlue, fontFamily: "Jalnan", fontSize: 35),
+      bodyMedium: TextStyle(color: WinterGreenColor.deepGrayBlue, fontFamily: "NanumSquareRound",fontWeight: FontWeight.w600, fontSize: 20),
+      bodySmall: TextStyle(color: WinterGreenColor.deepGrayBlue, fontFamily: "NanumSquareRound",fontWeight: FontWeight.w400, fontSize: 15));
+  static const Map<String, TextStyle> cuteTextStyle = {"contents": TextStyle(fontFamily: "NanumSquareRound", color: WinterGreenColor.deepGrayBlue)};
 }
 
 class RoundyDecoration {

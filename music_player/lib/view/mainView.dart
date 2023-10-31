@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'static/myOrdinaryStyle.dart';
 
-import 'route/playlist_page.dart';
-import 'route/playlist_page_liked.dart';
+import 'page/main/playlist_page.dart';
+import 'page/main/playlist_page_liked.dart';
+import 'page/detail/playlist_detail.dart';
+import 'page/detail/music_detail.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,8 +20,8 @@ class MyApp extends StatelessWidget {
       ),
       home: const NavigateHomePage(),
       routes: {
-        // ImagePage.ImageDetail.routeName: (context) => const ImagePage.ImageDetail(),
-        // WebPage.WebDetail.routeName: (context) => const WebPage.WebDetail()
+        PlayListDetail.routeName: (context) => const PlayListDetail(),
+        MusicDetail.routeName: (context) => const MusicDetail(),
       },
     );
   }

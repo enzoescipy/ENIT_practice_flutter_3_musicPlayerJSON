@@ -24,13 +24,19 @@ Widget appBar(BuildContext context, {String title = "new AppBar", bool isbackBut
 /// if sourceVOList provided, function will use sourceVOList to build items,
 /// append them inside widgetList, and then render it.
 /// (if sourceVOList provided, context must not be null.)
-Widget listView(List<Widget> widgetList, {List<PlayListVO>? sourceVOList, BuildContext? context}) {
-  if (sourceVOList == null) {
-    return Expanded(child: ListView(children: widgetList));
-  } else if (context != null) {
-    widgetList.addAll(sourceVOList.map((vo) => Item.playListVOtoListViewItem(context, vo)));
-    return Expanded(child: ListView(children: widgetList));
-  } else {
-    throw Exception("내가 컨텍스트 너라고 했지?");
-  }
+Widget _listView(List<VO> sourceVOList, Widget Function(BuildContext, VO) toItemFunc,BuildContext context) {
+  final widgetList = sourceVOList.map((vo) => toItemFunc(context, vo)).toList();
+  return Expanded(child: ListView(children: widgetList));
+}
+
+/// if sourceVOList not provided, function will use widgetList by ListView children.
+/// if sourceVOList provided, function will use sourceVOList to build items,
+/// append them inside widgetList, and then render it.
+/// (if sourceVOList provided, context must not be null.)
+Widget listViewPlayListVO(List<PlayListVO> sourceVOList,BuildContext context) {
+  return _listView(sourceVOList, (cont, vo) => Item.playListVOtoListViewItem(cont, vo as PlayListVO), context);
+}
+
+Widget listViewMusicListVO(List<MusicVO> sourceVOList,BuildContext context) {
+  return _listView(sourceVOList, (cont, vo) => Item.musicVOtoListViewItem(cont, vo as MusicVO), context);
 }
