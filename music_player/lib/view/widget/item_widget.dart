@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/model/vo.dart';
+import 'package:music_player/package/debugConsole.dart';
 import 'package:music_player/view/page/detail/playlist_detail.dart';
 import 'package:music_player/view/page/detail/music_detail.dart';
 import 'package:music_player/view/static/myOrdinaryStyle.dart';
@@ -53,6 +54,7 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo, {void Funct
   return GestureDetector(
     onTap: () {
       if (onTapInstead == null) {
+        debugConsole([PlayListDetail.routeName, vo.name, "route pushed"]);
         Navigator.pushNamed(context, PlayListDetail.routeName, arguments: PlayListDetailArguments(vo));
       } else {
         onTapInstead();
@@ -89,7 +91,11 @@ Widget musicVOtoListViewItem(BuildContext context, MusicVO vo) {
   );
 
   return GestureDetector(
+    // onLongPress: () {
+
+    // },
     onTap: () {
+      debugConsole([MusicDetail.routeName, vo.name, "route pushed"]);
       Navigator.pushNamed(context, MusicDetail.routeName, arguments: MusicDetailArguments(vo));
     },
     child: Padding(

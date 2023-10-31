@@ -8,7 +8,7 @@ import 'package:music_player/view/widget/page_component.dart' as Component;
 
 class NewPlayListPage extends StatefulWidget {
   const NewPlayListPage({super.key});
-  static const routeName = '/MusicDetail';
+  static const routeName = '/NewPlayListPage';
 
   @override
   State<NewPlayListPage> createState() => _NewPlayListPageState();
@@ -33,7 +33,7 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> children = [Component.appBar(context)];
+    final List<Widget> children = [Component.appBar(context, title: "플레이 리스트 만들기", isbackButton: true)];
     switch (_stageNum) {
       case 0:
         children.add(askNameOfPlayList());
