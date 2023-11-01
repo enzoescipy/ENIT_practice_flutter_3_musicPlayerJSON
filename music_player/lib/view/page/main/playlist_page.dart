@@ -37,6 +37,9 @@ class _PlayListPageState extends State<PlayListPage> {
 
   @override
   Widget build(BuildContext context) {
+    //debug
+    debugConsole(_contentVOList.map((e) => e.isHidden));
+    //debug
     return Column(
       children: [
         Component.appBar(context, title: "플레이 리스트"),

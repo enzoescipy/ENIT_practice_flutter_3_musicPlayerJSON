@@ -106,7 +106,7 @@ class _NewPlayListPageState extends State<NewPlayListPage> {
   Widget selectMusicIncluded() {
     // debugConsole("Called!!");
 
-    final widgetList = _musicVOList.map((vo) => Item.musicVOtoListViewItem(context, vo)).toList();
+    final widgetList = _musicVOList.map((vo) => Item.musicVOtoListViewItem(context, vo, null)).toList();
     final List<Widget> widgetWithCheckBoxList = [];
     for (int i = 0; i < widgetList.length; i++) {
       widgetWithCheckBoxList.add(Row(children: [

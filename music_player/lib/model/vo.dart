@@ -6,7 +6,7 @@ abstract class VO {
 
   VO(this.name);
 
-  VO.fromMap(Map<String, dynamic> map);
+  VO.fromMap(Map<dynamic, dynamic> map);
 
   Map<String, dynamic> toMap() {
     return {"whichVO": whichVO.index, "name": name};
@@ -26,7 +26,7 @@ class MusicVO extends VO {
   }
 
   @override
-  MusicVO.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
+  MusicVO.fromMap(Map<dynamic, dynamic> map) : super.fromMap(map) {
     whichVO = VOType.music;
     name = map["title"];
     thumbnail_url = map["image"];
@@ -57,7 +57,15 @@ class MusicVO extends VO {
 
 class PlayListVO extends VO {
   int likeOrder = -1;
+  bool isHidden = false;
+
+  /// children of MusicVO index(key from DB) which this PlayListVO owned.
   final List<int> childrenIndex = [];
+
+  /// the "index" if hidden children which have to be hidden.
+  /// ex: childrenIndex = [2,3,4] and childrenHiddenIndex = [0],
+  /// the 0th position of childrenIndex (which is '2') must be hidden.
+  final List<int> childrenHiddenIndex = [];
 
   PlayListVO(String name, List<int> childrenIndex) : super(name) {
     this.name = name;
@@ -66,12 +74,15 @@ class PlayListVO extends VO {
   }
 
   @override
-  PlayListVO.fromMap(Map<String, dynamic> map) : super.fromMap(map) {
+  PlayListVO.fromMap(Map<dynamic, dynamic> map) : super.fromMap(map) {
     name = map["name"];
+    isHidden = map["isHidden"];
     whichVO = VOType.playList;
     likeOrder = map["likeOrder"];
     childrenIndex.clear();
     childrenIndex.addAll(map["childrenIndex"]);
+    childrenHiddenIndex.clear();
+    childrenHiddenIndex.addAll(map["childrenHiddenIndex"]);
   }
 
   @override
@@ -79,6 +90,8 @@ class PlayListVO extends VO {
     final basicMap = super.toMap();
     basicMap["likeOrder"] = likeOrder;
     basicMap["childrenIndex"] = childrenIndex;
+    basicMap["childrenHiddenIndex"] = childrenHiddenIndex;
+    basicMap["isHidden"] = isHidden;
 
     return basicMap;
   }

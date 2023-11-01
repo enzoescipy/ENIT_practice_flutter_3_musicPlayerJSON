@@ -19,6 +19,12 @@ class PlayListDetail extends StatefulWidget {
 class _PlayListDetailState extends State<PlayListDetail> {
   final List<MusicVO> _contentVOList = [];
 
+  void musicSetState() {
+    setState(() {
+      
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final PlayListVO playListVO = (ModalRoute.of(context)!.settings.arguments as PlayListDetailArguments).playListVO;
@@ -33,7 +39,8 @@ class _PlayListDetailState extends State<PlayListDetail> {
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
-        children: [Component.appBar(context, title: "음악 목록", isbackButton: true), Component.listViewMusicListVO(_contentVOList, context)],
+        children: [Component.appBar(context, title: "음악 목록", isbackButton: true), 
+        Component.listViewMusicListVOFromPlayListVO(playListVO, context, musicSetState)],
       ),
     );
   }

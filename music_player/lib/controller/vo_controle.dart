@@ -47,6 +47,7 @@ class VOStageCommitGet {
     // check if vo is imageVO or WebVO
     // currently, only the PlayListVO is the DB-store needed VO.
     // so, vo is the PlayListVO.
+
     if (vo is! PlayListVO) {
       throw Exception("vo must be the PlayListVO");
     }
@@ -64,7 +65,6 @@ class VOStageCommitGet {
       final StagedType stageType = stage[0];
       final VO stagedVO = stage[1];
 
-      // debugConsole([stagedVO.name, stagedVO.whichVO, vo.name, vo.whichVO]);
       if (stagedVO.name == vo.name && stagedVO.whichVO == vo.whichVO) {
         // this means there already staged action for this vo.
         isAlreadyVOStaged = true;
@@ -76,6 +76,7 @@ class VOStageCommitGet {
       }
     }
 
+    // debugConsole([vo.name, (vo as PlayListVO).isHidden]);
     if (isAlreadyVOStaged == false) {
       stagedList.add([StagedType.insert, vo]);
     }
@@ -116,6 +117,7 @@ class VOStageCommitGet {
       final VO stagedVO = stagedList[i][1];
       final StagedType stageType = stagedList[i][0];
       if (stageType == StagedType.insert) {
+        // debugConsole([stagedVO.name, (stagedVO as PlayListVO).isHidden, (stagedVO as PlayListVO).childrenHiddenIndex]);
         HIVEController.insertVO(stagedVO);
       } else {
         HIVEController.deleteVO(stagedVO);
@@ -132,8 +134,9 @@ class VOStageCommitGet {
     final mapListAll = HIVEController.getAll(null);
     List<PlayListVO> voListAll = [];
     mapListAll.forEach((map) {
-      var newVO = PlayListVO(map["name"], map["childrenIndex"]);
-      newVO.likeOrder = map["likeOrder"];
+      // var newVO = PlayListVO(map["name"], map["childrenIndex"]);
+      // newVO.likeOrder = map["likeOrder"];
+      var newVO = PlayListVO.fromMap(map);
       voListAll.add(newVO);
     });
 
@@ -146,15 +149,16 @@ class VOStageCommitGet {
     final mapListAll = HIVEController.getAll(null);
     List<PlayListVO> voListAll = [];
     mapListAll.forEach((map) {
-      var newVO = PlayListVO(map["name"], map["childrenIndex"]);
-      newVO.likeOrder = map["likeOrder"];
+      // var newVO = PlayListVO(map["name"], map["childrenIndex"]);
+      // newVO.likeOrder = map["likeOrder"];
+      var newVO = PlayListVO.fromMap(map);
       if (newVO.likeOrder >= 0) {
         voListAll.add(newVO);
       }
     });
 
     voListAll.sort((a, b) => a.likeOrder.compareTo(b.likeOrder));
-    debugConsole(voListAll.map((e) => e.likeOrder).toList());
+    // debugConsole(voListAll.map((e) => e.likeOrder).toList());
     return voListAll;
   }
 

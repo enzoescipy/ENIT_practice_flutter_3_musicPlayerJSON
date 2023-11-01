@@ -26,4 +26,14 @@ class MusicJsonReader {
   static List<MusicVO> getAll() {
     return musicVOList;
   }
+
+  static int? findIndexFromVO(MusicVO vo) {
+    for (int i = 0; i < musicVOList.length; i++) {
+      final targetVO = musicVOList[i];
+      if (targetVO.name == vo.name && targetVO.whichVO == vo.whichVO) {
+        return i;
+      }
+    }
+    return null;
+  }
 }
