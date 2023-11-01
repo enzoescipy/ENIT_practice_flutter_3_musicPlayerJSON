@@ -18,10 +18,19 @@ class PlayListDetail extends StatefulWidget {
 
 class _PlayListDetailState extends State<PlayListDetail> {
   final List<MusicVO> _contentVOList = [];
+  bool revalHiddenForNow = false;
 
   void musicSetState() {
+    setState(() {});
+  }
+
+  void onTapAppbar() {
     setState(() {
-      
+      if (revalHiddenForNow) {
+        revalHiddenForNow = false;
+      } else {
+        revalHiddenForNow = true;
+      }
     });
   }
 
@@ -39,8 +48,10 @@ class _PlayListDetailState extends State<PlayListDetail> {
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: Column(
-        children: [Component.appBar(context, title: "음악 목록", isbackButton: true), 
-        Component.listViewMusicListVOFromPlayListVO(playListVO, context, musicSetState)],
+        children: [
+          Component.appBar(context, title: "음악 목록", isbackButton: true, onTapAppbar: onTapAppbar),
+          Component.listViewMusicListVOFromPlayListVO(playListVO, context, musicSetState, hideHidden: !revalHiddenForNow)
+        ],
       ),
     );
   }

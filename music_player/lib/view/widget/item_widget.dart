@@ -56,8 +56,10 @@ Widget popupMenuPlayListCRUD(PlayListVO vo, BuildContext context, void Function(
                 );
               });
         case PlayListCRUD.updateChildren:
-          Navigator.pushNamed(context, NewPlayListPage.routeName, arguments: NewPlayListPageArguments(vo));
-          VOStageCommitGet.commit();
+          Navigator.pushNamed(context, NewPlayListPage.routeName, arguments: NewPlayListPageArguments(vo)).then((value) {
+            VOStageCommitGet.commit();
+            setStateThen();
+          });
         default:
           vo.isHidden = true;
           VOStageCommitGet.insertVO(vo);

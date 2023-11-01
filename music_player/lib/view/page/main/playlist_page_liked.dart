@@ -12,17 +12,32 @@ class PlayListLikedPage extends StatefulWidget {
 
 class _PlayListLikedPageState extends State<PlayListLikedPage> {
   final List<PlayListVO> _contentVOList = VOStageCommitGet.getLiked();
+  bool revalHiddenForNow = false;
 
   void menuSetState() {
     setState(() {
-      
+      _contentVOList.clear();
+      _contentVOList.addAll(VOStageCommitGet.getLiked());
+    });
+  }
+
+  void onTapAppbar() {
+    setState(() {
+      if (revalHiddenForNow) {
+        revalHiddenForNow = false;
+      } else {
+        revalHiddenForNow = true;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [Component.appBar(context, title: "좋아하는 플리"), Component.listViewPlayListVO(_contentVOList, context, menuSetState:menuSetState )],
+      children: [
+        Component.appBar(context, title: "좋아하는 플리", onTapAppbar: onTapAppbar),
+        Component.listViewPlayListVO(_contentVOList, context, menuSetState: menuSetState, hideHidden: !revalHiddenForNow)
+      ],
     );
   }
 }

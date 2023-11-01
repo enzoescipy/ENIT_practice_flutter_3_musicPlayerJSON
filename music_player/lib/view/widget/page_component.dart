@@ -6,8 +6,8 @@ import 'package:music_player/package/debugConsole.dart';
 
 import 'package:music_player/view/widget/item_widget.dart' as Item;
 
-Widget appBar(BuildContext context, {String title = "new AppBar", bool isbackButton = false}) {
-  return AppBar(
+Widget appBar(BuildContext context, {String title = "new AppBar", bool isbackButton = false, void Function()? onTapAppbar}) {
+  final appBar = AppBar(
     title: Container(
       width: 350,
       height: 30,
@@ -21,6 +21,12 @@ Widget appBar(BuildContext context, {String title = "new AppBar", bool isbackBut
     centerTitle: true,
     automaticallyImplyLeading: isbackButton,
   );
+
+  if (onTapAppbar != null) {
+    return GestureDetector(onTap: onTapAppbar, child: appBar);
+  } else {
+    return appBar;
+  }
 }
 
 Widget listViewFrom(List<Widget> children) {
@@ -31,7 +37,8 @@ Widget listViewFrom(List<Widget> children) {
 /// if sourceVOList provided, function will use sourceVOList to build items,
 /// append them inside widgetList, and then render it.
 /// (if sourceVOList provided, context must not be null.)
-Widget _simpleListViewFromVO(List<VO> sourceVOList, Widget Function(BuildContext, VO) toItemFunc, BuildContext context, {Widget? insertFirst}) {
+Widget _simpleListViewFromVO(List<VO> sourceVOList, Widget Function(BuildContext, VO) toItemFunc, BuildContext context,
+    {Widget? insertFirst}) {
   final widgetList = sourceVOList.map((vo) => toItemFunc(context, vo)).toList();
   if (insertFirst != null) {
     widgetList.add(insertFirst);
@@ -40,7 +47,7 @@ Widget _simpleListViewFromVO(List<VO> sourceVOList, Widget Function(BuildContext
 }
 
 Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context,
-    {bool isNewPlayListEnable = false, void Function()? routeHandler, void Function()? menuSetState}) {
+    {bool isNewPlayListEnable = false, void Function()? routeHandler, void Function()? menuSetState, bool hideHidden = true}) {
   if (isNewPlayListEnable == true && routeHandler == null) {
     throw Exception("routehandler must be prepared if you user the isNewPlay어쩌구");
   }
@@ -52,7 +59,13 @@ Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context,
     }
     final tempVO = PlayListVO("새로운 플레이리스트 만들기", []);
     insertFirst = Item.playListVOtoListViewItem(context, tempVO,
-        onTapInstead: routeHandler, isDropDownMenu: false, isLikeButton: false, insteadThumbnail: const Icon(Icons.new_label_outlined, size: 100,));
+        onTapInstead: routeHandler,
+        isDropDownMenu: false,
+        isLikeButton: false,
+        insteadThumbnail: const Icon(
+          Icons.new_label_outlined,
+          size: 100,
+        ));
   } else if (menuSetState == null) {
     throw Exception("menuSetState 잇ㅅ어얀하ㅔ");
   }
@@ -62,7 +75,7 @@ Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context,
   for (int i = 0; i < sourceVOList.length; i++) {
     final vo = sourceVOList[i];
     // debugConsole([vo.name, vo.isHidden]);
-    if (vo.isHidden == true) {
+    if (vo.isHidden == true && hideHidden == true) {
       continue;
     }
 
@@ -76,7 +89,10 @@ Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context,
       showableIndex.add(vo.childrenIndex[i]);
     }
     if (showableIndex.isEmpty) {
-      insteadThumbnail = const Icon(Icons.image_not_supported_outlined, size: 100,);
+      insteadThumbnail = const Icon(
+        Icons.image_not_supported_outlined,
+        size: 100,
+      );
     }
 
     debugConsole([vo.name, showableIndex.isEmpty, insteadThumbnail]);
@@ -91,18 +107,24 @@ Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context,
 }
 
 Widget listViewMusicListVO(List<MusicVO> sourceVOList, BuildContext context, void Function()? menuSetState) {
-  return _simpleListViewFromVO(sourceVOList, (cont, vo) => Item.musicVOtoListViewItem(cont, vo as MusicVO, menuSetState), context);
+  return _simpleListViewFromVO(
+      sourceVOList, (cont, vo) => Item.musicVOtoListViewItem(cont, vo as MusicVO, menuSetState), context);
 }
 
-Widget listViewMusicListVOFromPlayListVO(PlayListVO playListVO, BuildContext context, void Function()? menuSetState) {
+Widget listViewMusicListVOFromPlayListVO(PlayListVO playListVO, BuildContext context, void Function()? menuSetState, {bool hideHidden = true}) {
   final List<int> showableIndex = [];
 
-  for (int i = 0; i < playListVO.childrenIndex.length; i++) {
-    if (playListVO.childrenHiddenIndex.contains(i)) {
-      continue;
+  if (hideHidden) {
+    for (int i = 0; i < playListVO.childrenIndex.length; i++) {
+      if (playListVO.childrenHiddenIndex.contains(i)) {
+        continue;
+      }
+      showableIndex.add(playListVO.childrenIndex[i]);
     }
-    showableIndex.add(playListVO.childrenIndex[i]);
+  } else {
+    showableIndex.addAll(playListVO.childrenIndex);
   }
+
 
   List<MusicVO> sourceVOList = showableIndex.map((index) => MusicJsonReader.getVOFromIndex(index)!).toList();
   final List<Widget> widgetList = [];

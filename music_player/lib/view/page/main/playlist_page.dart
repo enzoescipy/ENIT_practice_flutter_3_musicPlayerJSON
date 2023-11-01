@@ -14,6 +14,7 @@ class PlayListPage extends StatefulWidget {
 
 class _PlayListPageState extends State<PlayListPage> {
   final List<PlayListVO> _contentVOList = VOStageCommitGet.getAll();
+  bool revalHiddenForNow = false;
 
   // final List<Widget> _contentWidgetList = _contentVOList.map((vo) => Item.playListVOtoListViewItem(context, vo)).toList();
 
@@ -28,22 +29,36 @@ class _PlayListPageState extends State<PlayListPage> {
   }
 
   void menuSetState() {
-    debugConsole("cleared!!!!!!!!");
+    // debugConsole("cleared!!!!!!!!");
     setState(() {
       _contentVOList.clear();
       _contentVOList.addAll(VOStageCommitGet.getAll());
     });
   }
 
+  void onTapAppbar() {
+    setState(() {
+      if (revalHiddenForNow) {
+        revalHiddenForNow = false;
+      } else {
+        revalHiddenForNow = true;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //debug
-    debugConsole(_contentVOList.map((e) => e.isHidden));
+    // debugConsole(_contentVOList.map((e) => e.isHidden));
     //debug
     return Column(
       children: [
-        Component.appBar(context, title: "플레이 리스트"),
-        Component.listViewPlayListVO(_contentVOList, context, isNewPlayListEnable: true, routeHandler: _makeNewPlayListRoute, menuSetState: menuSetState)
+        Component.appBar(context, title: "플레이 리스트", onTapAppbar: onTapAppbar),
+        Component.listViewPlayListVO(_contentVOList, context,
+            isNewPlayListEnable: true,
+            routeHandler: _makeNewPlayListRoute,
+            menuSetState: menuSetState,
+            hideHidden: !revalHiddenForNow)
       ],
     );
   }
