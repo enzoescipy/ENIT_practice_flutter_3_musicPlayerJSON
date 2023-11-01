@@ -95,7 +95,7 @@ Widget listViewPlayListVO(List<PlayListVO> sourceVOList, BuildContext context,
       );
     }
 
-    debugConsole([vo.name, showableIndex.isEmpty, insteadThumbnail]);
+    // debugConsole([vo.name, showableIndex.isEmpty, insteadThumbnail]);
     final item = Item.playListVOtoListViewItem(context, vo, setStateThen: menuSetState, insteadThumbnail: insteadThumbnail);
     widgetList.add(item);
   }
@@ -111,7 +111,8 @@ Widget listViewMusicListVO(List<MusicVO> sourceVOList, BuildContext context, voi
       sourceVOList, (cont, vo) => Item.musicVOtoListViewItem(cont, vo as MusicVO, menuSetState), context);
 }
 
-Widget listViewMusicListVOFromPlayListVO(PlayListVO playListVO, BuildContext context, void Function()? menuSetState, {bool hideHidden = true}) {
+Widget listViewMusicListVOFromPlayListVO(PlayListVO playListVO, BuildContext context, void Function()? menuSetState,
+    {bool hideHidden = true}) {
   final List<int> showableIndex = [];
 
   if (hideHidden) {
@@ -119,23 +120,28 @@ Widget listViewMusicListVOFromPlayListVO(PlayListVO playListVO, BuildContext con
       if (playListVO.childrenHiddenIndex.contains(i)) {
         continue;
       }
-      showableIndex.add(playListVO.childrenIndex[i]);
+      showableIndex.add(i);
     }
   } else {
-    showableIndex.addAll(playListVO.childrenIndex);
+    for (int i = 0; i < playListVO.childrenIndex.length; i++) {
+      showableIndex.add(i);
+    }
   }
 
+  debugConsole(playListVO.childrenIndex);
+  debugConsole(playListVO.childrenHiddenIndex);
+  debugConsole(showableIndex);
 
-  List<MusicVO> sourceVOList = showableIndex.map((index) => MusicJsonReader.getVOFromIndex(index)!).toList();
+  // List<MusicVO> sourceVOList = showableIndex.map((index) => MusicJsonReader.getVOFromIndex(index)!).toList();
   final List<Widget> widgetList = [];
 
-  for (int i = 0; i < sourceVOList.length; i++) {
+  for (int i = 0; i < showableIndex.length; i++) {
     final item = Item.musicVOtoListViewItem(
       context,
       null,
       menuSetState,
       playListVO: playListVO,
-      musicChildIndex: i,
+      musicChildIndex: showableIndex[i],
     );
     widgetList.add(item);
   }

@@ -5,6 +5,7 @@ import 'package:music_player/view/page/detail/playlist_detail.dart';
 import 'package:music_player/view/page/detail/music_detail.dart';
 import 'package:music_player/view/page/new_playlist/new_playlist_page.dart';
 import 'package:music_player/view/static/myOrdinaryStyle.dart';
+import 'package:music_player/package/debugConsole.dart';
 import 'package:music_player/view/static/text_input_formatter.dart' as Format;
 import 'package:music_player/controller/vo_controle.dart';
 import 'package:music_player/controller/temporary_music_json_reader.dart';
@@ -45,8 +46,9 @@ Widget popupMenuPlayListCRUD(PlayListVO vo, BuildContext context, void Function(
                             return;
                           }
                           VOStageCommitGet.deleteVO(vo);
-                          final newVO = PlayListVO(currentText, vo.childrenIndex);
-                          newVO.likeOrder = vo.likeOrder;
+                          final newVO = vo.copy();
+                          // final newVO = PlayListVO(currentText, vo.childrenIndex);
+                          // newVO.likeOrder = vo.likeOrder;
                           VOStageCommitGet.insertVO(newVO);
                           VOStageCommitGet.commit();
                           setStateThen();
@@ -82,7 +84,7 @@ Widget popupMenuPlayListCRUD(PlayListVO vo, BuildContext context, void Function(
   );
 }
 
-enum MusicCRUD { delete }
+enum MusicCRUD { delete, hide}
 
 /// warning : musicChildIndex is NOT the music's key from DB, it is just position(or target) from playListVO.childrenList!
 Widget popupMenuMusicCRUD(PlayListVO playListVO, int musicChildIndex, BuildContext context, void Function() setStateThen) {
@@ -95,11 +97,13 @@ Widget popupMenuMusicCRUD(PlayListVO playListVO, int musicChildIndex, BuildConte
             VOStageCommitGet.commit();
             setStateThen();
           default:
-            playListVO.childrenHiddenIndex.add(musicChildIndex);
-            playListVO.childrenHiddenIndex.sort();
-            VOStageCommitGet.insertVO(playListVO);
-            VOStageCommitGet.commit();
-            setStateThen();
+            if (!playListVO.childrenHiddenIndex.contains(musicChildIndex)) {
+              playListVO.childrenHiddenIndex.add(musicChildIndex);
+              playListVO.childrenHiddenIndex.sort();
+              VOStageCommitGet.insertVO(playListVO);
+              VOStageCommitGet.commit();
+              setStateThen();
+            }
         }
       },
       itemBuilder: (context) => <PopupMenuEntry<MusicCRUD>>[
@@ -110,12 +114,16 @@ Widget popupMenuMusicCRUD(PlayListVO playListVO, int musicChildIndex, BuildConte
               ),
               value: MusicCRUD.delete,
             ),
-            const PopupMenuItem<MusicCRUD>(child: Text("음악 숨기기"), value: MusicCRUD.delete),
+            const PopupMenuItem<MusicCRUD>(child: Text("음악 숨기기"), value: MusicCRUD.hide),
           ]);
 }
 
 Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo,
-    {void Function()? onTapInstead, bool isDropDownMenu = true, void Function()? setStateThen, bool isLikeButton = true, Widget? insteadThumbnail}) {
+    {void Function()? onTapInstead,
+    bool isDropDownMenu = true,
+    void Function()? setStateThen,
+    bool isLikeButton = true,
+    Widget? insteadThumbnail}) {
   // get the first element of the playlist
   String? thumbnail_url;
   final firstIndexMusic = vo.childrenIndex.isEmpty ? null : vo.childrenIndex.first;
@@ -135,7 +143,8 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo,
     thumbnailWidget = Image.network(thumbnail_url, width: 100, height: 100, fit: BoxFit.cover);
   }
 
-  final img = Container(margin: const EdgeInsets.all(10), child: ClipRRect(borderRadius: BorderRadius.circular(30), child: thumbnailWidget));
+  final img = Container(
+      margin: const EdgeInsets.all(10), child: ClipRRect(borderRadius: BorderRadius.circular(30), child: thumbnailWidget));
 
   final itemDescription = Padding(
     padding: const EdgeInsets.all(3.0),
@@ -197,7 +206,8 @@ Widget playListVOtoListViewItem(BuildContext context, PlayListVO vo,
   );
 }
 
-Widget musicVOtoListViewItem(BuildContext context, MusicVO? vo, void Function()? setStateThen, {PlayListVO? playListVO, int? musicChildIndex}) {
+Widget musicVOtoListViewItem(BuildContext context, MusicVO? vo, void Function()? setStateThen,
+    {PlayListVO? playListVO, int? musicChildIndex}) {
   // get musicVO from the playListVO if exists
   if (playListVO != null && musicChildIndex != null && vo == null) {
     vo = MusicJsonReader.getVOFromIndex(playListVO.childrenIndex[musicChildIndex]);

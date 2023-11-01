@@ -8,10 +8,10 @@ Future<List> parseJsonFromAssets(String assetsPath) async {
 }
 
 class MusicJsonReader {
-  static List<MusicVO> musicVOList = [];
+  static final List<MusicVO> musicVOList = [];
   static Future<void> InitializeReader() async {
     List musicJson = await parseJsonFromAssets('asset/music_list.json');
-    musicVOList = musicJson.map((map) => MusicVO.fromMap(map)).toList();
+    musicVOList.addAll(musicJson.map((map) => MusicVO.fromMap(map)).toList());
   }
 
   static MusicVO? getVOFromIndex(int index) {

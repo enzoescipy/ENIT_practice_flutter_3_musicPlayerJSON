@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/model/vo.dart';
 import 'package:music_player/controller/vo_controle.dart';
+import 'package:music_player/package/debugConsole.dart';
 import 'package:music_player/view/widget/page_component.dart' as Component;
 
 class PlayListLikedPage extends StatefulWidget {
@@ -22,6 +23,7 @@ class _PlayListLikedPageState extends State<PlayListLikedPage> {
   }
 
   void onTapAppbar() {
+    debugConsole("appbar touched!!! (likedPage)");
     setState(() {
       if (revalHiddenForNow) {
         revalHiddenForNow = false;

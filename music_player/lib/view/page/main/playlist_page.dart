@@ -29,7 +29,6 @@ class _PlayListPageState extends State<PlayListPage> {
   }
 
   void menuSetState() {
-    // debugConsole("cleared!!!!!!!!");
     setState(() {
       _contentVOList.clear();
       _contentVOList.addAll(VOStageCommitGet.getAll());
@@ -37,6 +36,7 @@ class _PlayListPageState extends State<PlayListPage> {
   }
 
   void onTapAppbar() {
+    debugConsole("appbar touched!!! (playlist page)");
     setState(() {
       if (revalHiddenForNow) {
         revalHiddenForNow = false;

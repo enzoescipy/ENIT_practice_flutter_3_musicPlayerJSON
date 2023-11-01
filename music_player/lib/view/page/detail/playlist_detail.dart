@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/model/vo.dart';
 import 'package:music_player/controller/temporary_music_json_reader.dart';
+import 'package:music_player/package/debugConsole.dart';
 import 'package:music_player/view/widget/page_component.dart' as Component;
 
 class PlayListDetailArguments {
@@ -25,6 +26,7 @@ class _PlayListDetailState extends State<PlayListDetail> {
   }
 
   void onTapAppbar() {
+    debugConsole("appbar touched!!! (playlist detail)");
     setState(() {
       if (revalHiddenForNow) {
         revalHiddenForNow = false;

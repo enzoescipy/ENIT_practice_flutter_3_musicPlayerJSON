@@ -11,6 +11,8 @@ abstract class VO {
   Map<String, dynamic> toMap() {
     return {"whichVO": whichVO.index, "name": name};
   }
+
+
 }
 
 class MusicVO extends VO {
@@ -94,6 +96,10 @@ class PlayListVO extends VO {
     basicMap["isHidden"] = isHidden;
 
     return basicMap;
+  }
+
+  VO copy() {
+    return PlayListVO.fromMap(toMap());
   }
 
   // @override
