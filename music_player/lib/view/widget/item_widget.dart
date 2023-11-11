@@ -47,6 +47,7 @@ Widget popupMenuPlayListCRUD(PlayListVO vo, BuildContext context, void Function(
                           }
                           VOStageCommitGet.deleteVO(vo);
                           final newVO = vo.copy();
+                          newVO.name = currentText;
                           // final newVO = PlayListVO(currentText, vo.childrenIndex);
                           // newVO.likeOrder = vo.likeOrder;
                           VOStageCommitGet.insertVO(newVO);
@@ -84,7 +85,7 @@ Widget popupMenuPlayListCRUD(PlayListVO vo, BuildContext context, void Function(
   );
 }
 
-enum MusicCRUD { delete, hide}
+enum MusicCRUD { delete, hide }
 
 /// warning : musicChildIndex is NOT the music's key from DB, it is just position(or target) from playListVO.childrenList!
 Widget popupMenuMusicCRUD(PlayListVO playListVO, int musicChildIndex, BuildContext context, void Function() setStateThen) {
